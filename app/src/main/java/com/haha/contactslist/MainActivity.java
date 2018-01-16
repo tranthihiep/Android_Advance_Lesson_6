@@ -18,22 +18,15 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    String phoneNumber = "";
-    // ArrayList
-    ArrayList<SelectUser> selectUsers;
-    List<SelectUser> temp;
-    // Contact List
-    ListView listView;
-    // Cursor to load contacts list
-    Cursor phones;
-
-    // Pop up
-    ContentResolver resolver;
-    SelectUserAdapter adapter;
+    private String phoneNumber = "";
+    private ArrayList<SelectUser> mSelectUsers;
+    private ListView mListView;
+    private Cursor mCursor;
+    private ContentResolver resolver;
+    private SelectUserAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,11 +53,11 @@ public class MainActivity extends AppCompatActivity {
                     Manifest.permission.READ_CONTACTS}, 4);
             return;
         }
-        selectUsers = new ArrayList<SelectUser>();
+        mSelectUsers = new ArrayList<SelectUser>();
         resolver = this.getContentResolver();
-        listView = (ListView) findViewById(R.id.contacts_list);
+        mListView = (ListView) findViewById(R.id.contacts_list);
         try {
-            phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+            mCursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
                     null, null, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
         } catch (Exception ex) {
             Log.e("Error", ex.getMessage());
@@ -85,24 +78,24 @@ public class MainActivity extends AppCompatActivity {
         protected Void doInBackground(Void... voids) {
             // Get Contact list from Phone
 
-            if (phones != null) {
-                Log.e("count", "" + phones.getCount());
-                if (phones.getCount() == 0) {
+            if (mCursor != null) {
+                Log.e("count", "" + mCursor.getCount());
+                if (mCursor.getCount() == 0) {
                     Toast.makeText(MainActivity.this, "No contacts on list.", Toast.LENGTH_LONG).show();
                 }
 
-                while (phones.moveToNext()) {
-                    String name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-                    phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                while (mCursor.moveToNext()) {
+                    String name = mCursor.getString(mCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                    phoneNumber = mCursor.getString(mCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                     SelectUser selectUser = new SelectUser();
                     selectUser.setName(name);
                     selectUser.setPhone(phoneNumber);
-                    selectUsers.add(selectUser);
+                    mSelectUsers.add(selectUser);
                 }
             } else {
                 Log.e("Cursor close", "----------------");
             }
-            phones.close();
+            mCursor.close();
             return null;
         }
 
@@ -110,8 +103,8 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            adapter = new SelectUserAdapter(selectUsers, MainActivity.this);
-            listView.setAdapter(adapter);
+            mAdapter = new SelectUserAdapter(mSelectUsers, MainActivity.this);
+            mListView.setAdapter(mAdapter);
 
     }
 
