@@ -3,7 +3,6 @@ package com.haha.contactslist;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,26 +19,26 @@ import java.util.List;
  */
 
 public class SelectUserAdapter extends BaseAdapter implements View.OnClickListener {
-    public List<SelectUser> _data;
-    private ArrayList<SelectUser> arraylist;
-    Context _c;
-    ViewHolder v;
+    public List<SelectUser> mUsers;
+    private ArrayList<SelectUser> mArraylist;
+    private Context mContext;
+    private ViewHolder mView;
 
     public SelectUserAdapter(List<SelectUser> selectUsers, Context context) {
-        _data = selectUsers;
-        _c = context;
-        this.arraylist = new ArrayList<SelectUser>();
-        this.arraylist.addAll(_data);
+        mUsers = selectUsers;
+        mContext = context;
+        this.mArraylist = new ArrayList<SelectUser>();
+        this.mArraylist.addAll(mUsers);
     }
 
     @Override
     public int getCount() {
-        return _data.size();
+        return mUsers.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return _data.get(i);
+        return mUsers.get(i);
     }
 
     @Override
@@ -52,45 +51,38 @@ public class SelectUserAdapter extends BaseAdapter implements View.OnClickListen
     public View getView(int i, View convertView, ViewGroup viewGroup) {
         View view = convertView;
         if (view == null) {
-            LayoutInflater li = (LayoutInflater) _c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater li = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = li.inflate(R.layout.row_contacts, null);
-            Log.e("Inside", "here--------------------------- In view1");
+
         } else {
             view = convertView;
-            Log.e("Inside", "here--------------------------- In view2");
         }
 
-        v = new ViewHolder();
-        v.mBtnCall = (ImageButton) view.findViewById(R.id.btnCall);
-        v.mBtnSend = (ImageButton) view.findViewById(R.id.btnSend);
-        v.title = (TextView) view.findViewById(R.id.name);
-        v.phone = (TextView) view.findViewById(R.id.no);
-        v.imageView = (ImageView) view.findViewById(R.id.pic);
+        mView = new ViewHolder();
+        mView.mBtnCall = (ImageButton) view.findViewById(R.id.btnCall);
+        mView.mBtnSend = (ImageButton) view.findViewById(R.id.btnSend);
+        mView.title = (TextView) view.findViewById(R.id.name);
+        mView.phone = (TextView) view.findViewById(R.id.no);
+        mView.imageView = (ImageView) view.findViewById(R.id.pic);
 
-        final SelectUser data = (SelectUser) _data.get(i);
-        v.title.setText(data.getName());
-        v.phone.setText(data.getPhone());
-        v.mBtnCall.setOnClickListener(this);
-        v.mBtnSend.setOnClickListener(this);
-
-
-        // Set image if exists
-
-        Log.e("Image Thumb", "--------------" + data.getThumb());
-
+        final SelectUser data = (SelectUser) mUsers.get(i);
+        mView.title.setText(data.getName());
+        mView.phone.setText(data.getPhone());
+        mView.mBtnCall.setOnClickListener(this);
+        mView.mBtnSend.setOnClickListener(this);
         view.setTag(data);
         return view;
     }
 
     @Override
     public void onClick(View view) {
-        MainActivity mainActivity = new MainActivity();
+        //MainActivity mainActivity = new MainActivity();
         switch (view.getId()){
             case R.id.btnCall:
-                mainActivity.setCall();
+               // mainActivity.setCall();
                 break;
             case R.id.btnSend:
-                mainActivity.setSend();
+                //mainActivity.setSend();
                 break;
         }
     }
